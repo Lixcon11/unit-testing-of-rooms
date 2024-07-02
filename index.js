@@ -1,22 +1,25 @@
 class Room {
 
-    constructor(name, bookings, rate, discount) {
-        this.name = name;
-        this.bookings = [...bookings];
-        this.rate = rate;
-        this.discount = discount;
+    constructor(obj) {
+        this.name = obj.name;
+        this.bookings = [...obj.bookings];
+        this.rate = obj.rate;
+        this.discount = obj.discount;
     }
 
     isOccupied(date) {
         const searchBookings = [...this.bookings]
+        const newDate = new Date(date);
 
-        searchBookings.map(booking => {
-            const dates = sortDates([booking.checkIn, booking.checkOut, date])
-            
-            if(dates[1] == date) {
+        for(let booking of searchBookings) {
+            const checkIn = new Date(booking.checkIn);
+            const checkOut = new Date(booking.checkOut);
+            const dates = sortDates([checkIn, checkOut, newDate])
+
+            if(dates[1].getTime() === newDate.getTime()) {
                 return true;
             }
-        })
+        }
 
         return false;
     }
@@ -26,7 +29,7 @@ class Room {
         const allDates = getDateArray(start, end)
 
         allDates.map(date => {
-            if(isOccupied(date)){
+            if(this.isOccupied(date)){
                 occupacy++;
             }
         })
@@ -54,9 +57,9 @@ class Room {
     static availableRooms(rooms, start, end) {
         const availables = []
         const allDates = getDateArray(start, end)
-
         rooms.map(room => {
             let free = true
+
             for(let date of allDates) {
                 if(room.isOccupied(date)) {
                     free = false
@@ -74,17 +77,19 @@ class Room {
 
 class Booking {
 
-    constructor(name, email, checkIn, checkOut, discount, room) {
-        this.name = name;
-        this.email = email;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-        this.discount = discount;
-        this.room = room;
+    constructor(obj) {
+        this.name = obj.name;
+        this.email = obj.email;
+        this.checkIn = obj.checkIn;
+        this.checkOut = obj.checkOut;
+        this.discount = obj.discount;
+        this.room = obj.room;
     }
 
     getFee() {
-        return (this.room.price * (this.room.discount/100)) * (this.discount/100)
+        const roomDiscount = this.room.rate - (this.room.rate * (this.room.discount/100));
+        
+        return roomDiscount - (roomDiscount * (this.discount/100))
     }
 }
 
@@ -101,11 +106,15 @@ const sortDates = (dates) => {
 }
 
 const getDateArray = (start, end) => {
-    var arr = new Array();
-    var dt = new Date(start);
-    while (dt <= end) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const arr = new Array();
+    const dt = new Date(startDate);
+    while (dt <= endDate) {
         arr.push(new Date(dt));
         dt.setDate(dt.getDate() + 1);
     }
     return arr;
 }
+
+module.exports = { Room, Booking }
