@@ -1,3 +1,4 @@
+import {describe, expect, test} from '@jest/globals';
 const { Room, Booking } =require("./index")
 //Room: name, email, checkIn, checkOut, discount, room
 //Booking: name, email, checkIn, checkOut, discount, room
@@ -110,20 +111,20 @@ describe("Tests about availableRooms", () => {
 
 describe("Tests about getFee", () => {
 
-    test("Booking with correct data return 360", () => {
-        expect(bookingTemplate1.getFee()).toBe(360)
+    test("Booking with correct data return 720", () => {
+        expect(bookingTemplate1.getFee()).toBe(720)
     })
 
-    test("Booking with correct data return 380", () => {
-        expect(bookingTemplate5.getFee()).toBe(380)
+    test("Booking with correct data return 1140", () => {
+        expect(bookingTemplate5.getFee()).toBe(1140)
     })
 
     test("Booking with correct data return 304", () => {
         expect(bookingTemplate4.getFee()).toBe(304)
     })
 
-    test("Booking with correct data return 190", () => {
-        expect(bookingTemplate6.getFee()).toBe(190)
+    test("Booking with correct data return 570", () => {
+        expect(bookingTemplate6.getFee()).toBe(570)
     })
 
 })

@@ -116,9 +116,22 @@ class Booking implements TBooking {
     }
 
     getFee() {
+
+        const firstDate = new Date(this.checkIn)
+        const secondDate = new Date(this.checkOut)
+        
+        const firstDateInMs = firstDate.getTime()
+        const secondDateInMs = secondDate.getTime()
+        
+        const differenceBtwDates = secondDateInMs - firstDateInMs
+        
+        const aDayInMs = 24 * 60 * 60 * 1000
+        
+        const daysDiff = Math.round(differenceBtwDates / aDayInMs)
+
         const roomDiscount = this.room.rate - (this.room.rate * (this.room.discount/100));
         
-        return roomDiscount - (roomDiscount * (this.discount/100))
+        return (roomDiscount - (roomDiscount * (this.discount/100))) * daysDiff
     }
 }
 
